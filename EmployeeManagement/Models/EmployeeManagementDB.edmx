@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EmployeeManagementDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CompanyWorkingHours">
+          <Key>
+            <PropertyRef Name="CompanyWorkingHourId" />
+          </Key>
+          <Property Name="CompanyWorkingHourId" Type="int" Nullable="false" />
+          <Property Name="ShiftName" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="WorkingHours" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="LunchTime" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeeDesignationTable">
+          <Key>
+            <PropertyRef Name="DesignationId" />
+          </Key>
+          <Property Name="S.No" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="DesignationName" Type="varchar" MaxLength="70" Nullable="false" />
+          <Property Name="GradeLevel" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="Role" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Department" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeeDetailsTable">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="S.no" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeId" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PhoneNumber" Type="bigint" Nullable="false" />
+          <Property Name="Email" Type="varchar(max)" Nullable="false" />
+          <Property Name="Address" Type="varchar(max)" />
+          <Property Name="DesignationId" Type="int" Nullable="false" />
+          <Property Name="EmployeeWorkingHours" Type="int" Nullable="false" />
+          <Property Name="LeaveRequests" Type="int" />
+        </EntityType>
+        <EntityType Name="LoginTable">
+          <Key>
+            <PropertyRef Name="LoginId" />
+          </Key>
+          <Property Name="LoginId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Email" Type="varchar(max)" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="EmployeeId" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PaymentRules">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="int" Nullable="false" />
+          <Property Name="DocumentName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DocumentType" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="DocumentData" Type="varbinary(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RequestLeave">
+          <Key>
+            <PropertyRef Name="LeaveId" />
+          </Key>
+          <Property Name="LeaveId" Type="int" Nullable="false" />
+          <Property Name="LeaveType" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="LeaveDate" Type="date" Nullable="false" />
+          <Property Name="LeaveReason" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_EmployeeDetailsTable_CompanyWorkingHours">
+          <End Role="CompanyWorkingHours" Type="Self.CompanyWorkingHours" Multiplicity="1" />
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyWorkingHours">
+              <PropertyRef Name="CompanyWorkingHourId" />
+            </Principal>
+            <Dependent Role="EmployeeDetailsTable">
+              <PropertyRef Name="EmployeeWorkingHours" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeDetailsTable_EmployeeDesignationTable">
+          <End Role="EmployeeDesignationTable" Type="Self.EmployeeDesignationTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeDesignationTable">
+              <PropertyRef Name="DesignationId" />
+            </Principal>
+            <Dependent Role="EmployeeDetailsTable">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeDetailsTable_RequestLeave">
+          <End Role="RequestLeave" Type="Self.RequestLeave" Multiplicity="0..1" />
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestLeave">
+              <PropertyRef Name="LeaveId" />
+            </Principal>
+            <Dependent Role="EmployeeDetailsTable">
+              <PropertyRef Name="LeaveRequests" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginTable_EmployeeDetailsTable">
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="1" />
+          <End Role="LoginTable" Type="Self.LoginTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeDetailsTable">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="LoginTable">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EmployeeManagementDBModelStoreContainer">
+          <EntitySet Name="CompanyWorkingHours" EntityType="Self.CompanyWorkingHours" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeDesignationTable" EntityType="Self.EmployeeDesignationTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmployeeDetailsTable" EntityType="Self.EmployeeDetailsTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LoginTable" EntityType="Self.LoginTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PaymentRules" EntityType="Self.PaymentRules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RequestLeave" EntityType="Self.RequestLeave" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_EmployeeDetailsTable_CompanyWorkingHours" Association="Self.FK_EmployeeDetailsTable_CompanyWorkingHours">
+            <End Role="CompanyWorkingHours" EntitySet="CompanyWorkingHours" />
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeDetailsTable_EmployeeDesignationTable" Association="Self.FK_EmployeeDetailsTable_EmployeeDesignationTable">
+            <End Role="EmployeeDesignationTable" EntitySet="EmployeeDesignationTable" />
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeDetailsTable_RequestLeave" Association="Self.FK_EmployeeDetailsTable_RequestLeave">
+            <End Role="RequestLeave" EntitySet="RequestLeave" />
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginTable_EmployeeDetailsTable" Association="Self.FK_LoginTable_EmployeeDetailsTable">
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTable" />
+            <End Role="LoginTable" EntitySet="LoginTable" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EmployeeManagementDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CompanyWorkingHour">
+          <Key>
+            <PropertyRef Name="CompanyWorkingHourId" />
+          </Key>
+          <Property Name="CompanyWorkingHourId" Type="Int32" Nullable="false" />
+          <Property Name="ShiftName" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="WorkingHours" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LunchTime" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EmployeeDetailsTables" Relationship="Self.FK_EmployeeDetailsTable_CompanyWorkingHours" FromRole="CompanyWorkingHours" ToRole="EmployeeDetailsTable" />
+        </EntityType>
+        <EntityType Name="EmployeeDesignationTable">
+          <Key>
+            <PropertyRef Name="DesignationId" />
+          </Key>
+          <Property Name="S_No" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DesignationId" Type="Int32" Nullable="false" />
+          <Property Name="DesignationName" Type="String" MaxLength="70" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GradeLevel" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Department" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EmployeeDetailsTables" Relationship="Self.FK_EmployeeDetailsTable_EmployeeDesignationTable" FromRole="EmployeeDesignationTable" ToRole="EmployeeDetailsTable" />
+        </EntityType>
+        <EntityType Name="EmployeeDetailsTable">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="S_no" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PhoneNumber" Type="Int64" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DesignationId" Type="Int32" Nullable="false" />
+          <Property Name="EmployeeWorkingHours" Type="Int32" Nullable="false" />
+          <Property Name="LeaveRequests" Type="Int32" />
+          <NavigationProperty Name="CompanyWorkingHour" Relationship="Self.FK_EmployeeDetailsTable_CompanyWorkingHours" FromRole="EmployeeDetailsTable" ToRole="CompanyWorkingHours" />
+          <NavigationProperty Name="EmployeeDesignationTable" Relationship="Self.FK_EmployeeDetailsTable_EmployeeDesignationTable" FromRole="EmployeeDetailsTable" ToRole="EmployeeDesignationTable" />
+          <NavigationProperty Name="RequestLeave" Relationship="Self.FK_EmployeeDetailsTable_RequestLeave" FromRole="EmployeeDetailsTable" ToRole="RequestLeave" />
+          <NavigationProperty Name="LoginTables" Relationship="Self.FK_LoginTable_EmployeeDetailsTable" FromRole="EmployeeDetailsTable" ToRole="LoginTable" />
+        </EntityType>
+        <EntityType Name="LoginTable">
+          <Key>
+            <PropertyRef Name="LoginId" />
+          </Key>
+          <Property Name="LoginId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="EmployeeId" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EmployeeDetailsTable" Relationship="Self.FK_LoginTable_EmployeeDetailsTable" FromRole="LoginTable" ToRole="EmployeeDetailsTable" />
+        </EntityType>
+        <EntityType Name="PaymentRule">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="Int32" Nullable="false" />
+          <Property Name="DocumentName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocumentType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DocumentData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RequestLeave">
+          <Key>
+            <PropertyRef Name="LeaveId" />
+          </Key>
+          <Property Name="LeaveId" Type="Int32" Nullable="false" />
+          <Property Name="LeaveType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LeaveDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LeaveReason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="EmployeeDetailsTables" Relationship="Self.FK_EmployeeDetailsTable_RequestLeave" FromRole="RequestLeave" ToRole="EmployeeDetailsTable" />
+        </EntityType>
+        <Association Name="FK_EmployeeDetailsTable_CompanyWorkingHours">
+          <End Role="CompanyWorkingHours" Type="Self.CompanyWorkingHour" Multiplicity="1" />
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyWorkingHours">
+              <PropertyRef Name="CompanyWorkingHourId" />
+            </Principal>
+            <Dependent Role="EmployeeDetailsTable">
+              <PropertyRef Name="EmployeeWorkingHours" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeDetailsTable_EmployeeDesignationTable">
+          <End Role="EmployeeDesignationTable" Type="Self.EmployeeDesignationTable" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeDesignationTable">
+              <PropertyRef Name="DesignationId" />
+            </Principal>
+            <Dependent Role="EmployeeDetailsTable">
+              <PropertyRef Name="DesignationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EmployeeDetailsTable_RequestLeave">
+          <End Role="RequestLeave" Type="Self.RequestLeave" Multiplicity="0..1" />
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RequestLeave">
+              <PropertyRef Name="LeaveId" />
+            </Principal>
+            <Dependent Role="EmployeeDetailsTable">
+              <PropertyRef Name="LeaveRequests" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LoginTable_EmployeeDetailsTable">
+          <End Role="EmployeeDetailsTable" Type="Self.EmployeeDetailsTable" Multiplicity="1" />
+          <End Role="LoginTable" Type="Self.LoginTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmployeeDetailsTable">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="LoginTable">
+              <PropertyRef Name="EmployeeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EmployeeManagementDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CompanyWorkingHours" EntityType="Self.CompanyWorkingHour" />
+          <EntitySet Name="EmployeeDesignationTables" EntityType="Self.EmployeeDesignationTable" />
+          <EntitySet Name="EmployeeDetailsTables" EntityType="Self.EmployeeDetailsTable" />
+          <EntitySet Name="LoginTables" EntityType="Self.LoginTable" />
+          <EntitySet Name="PaymentRules" EntityType="Self.PaymentRule" />
+          <EntitySet Name="RequestLeaves" EntityType="Self.RequestLeave" />
+          <AssociationSet Name="FK_EmployeeDetailsTable_CompanyWorkingHours" Association="Self.FK_EmployeeDetailsTable_CompanyWorkingHours">
+            <End Role="CompanyWorkingHours" EntitySet="CompanyWorkingHours" />
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeDetailsTable_EmployeeDesignationTable" Association="Self.FK_EmployeeDetailsTable_EmployeeDesignationTable">
+            <End Role="EmployeeDesignationTable" EntitySet="EmployeeDesignationTables" />
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EmployeeDetailsTable_RequestLeave" Association="Self.FK_EmployeeDetailsTable_RequestLeave">
+            <End Role="RequestLeave" EntitySet="RequestLeaves" />
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTables" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LoginTable_EmployeeDetailsTable" Association="Self.FK_LoginTable_EmployeeDetailsTable">
+            <End Role="EmployeeDetailsTable" EntitySet="EmployeeDetailsTables" />
+            <End Role="LoginTable" EntitySet="LoginTables" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EmployeeManagementDBModelStoreContainer" CdmEntityContainer="EmployeeManagementDBEntities">
+          <EntitySetMapping Name="CompanyWorkingHours">
+            <EntityTypeMapping TypeName="EmployeeManagementDBModel.CompanyWorkingHour">
+              <MappingFragment StoreEntitySet="CompanyWorkingHours">
+                <ScalarProperty Name="CompanyWorkingHourId" ColumnName="CompanyWorkingHourId" />
+                <ScalarProperty Name="ShiftName" ColumnName="ShiftName" />
+                <ScalarProperty Name="WorkingHours" ColumnName="WorkingHours" />
+                <ScalarProperty Name="LunchTime" ColumnName="LunchTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeDesignationTables">
+            <EntityTypeMapping TypeName="EmployeeManagementDBModel.EmployeeDesignationTable">
+              <MappingFragment StoreEntitySet="EmployeeDesignationTable">
+                <ScalarProperty Name="S_No" ColumnName="S.No" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="DesignationName" ColumnName="DesignationName" />
+                <ScalarProperty Name="GradeLevel" ColumnName="GradeLevel" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Department" ColumnName="Department" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeDetailsTables">
+            <EntityTypeMapping TypeName="EmployeeManagementDBModel.EmployeeDetailsTable">
+              <MappingFragment StoreEntitySet="EmployeeDetailsTable">
+                <ScalarProperty Name="S_no" ColumnName="S.no" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="DesignationId" ColumnName="DesignationId" />
+                <ScalarProperty Name="EmployeeWorkingHours" ColumnName="EmployeeWorkingHours" />
+                <ScalarProperty Name="LeaveRequests" ColumnName="LeaveRequests" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LoginTables">
+            <EntityTypeMapping TypeName="EmployeeManagementDBModel.LoginTable">
+              <MappingFragment StoreEntitySet="LoginTable">
+                <ScalarProperty Name="LoginId" ColumnName="LoginId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PaymentRules">
+            <EntityTypeMapping TypeName="EmployeeManagementDBModel.PaymentRule">
+              <MappingFragment StoreEntitySet="PaymentRules">
+                <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+                <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
+                <ScalarProperty Name="DocumentType" ColumnName="DocumentType" />
+                <ScalarProperty Name="DocumentData" ColumnName="DocumentData" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RequestLeaves">
+            <EntityTypeMapping TypeName="EmployeeManagementDBModel.RequestLeave">
+              <MappingFragment StoreEntitySet="RequestLeave">
+                <ScalarProperty Name="LeaveId" ColumnName="LeaveId" />
+                <ScalarProperty Name="LeaveType" ColumnName="LeaveType" />
+                <ScalarProperty Name="LeaveDate" ColumnName="LeaveDate" />
+                <ScalarProperty Name="LeaveReason" ColumnName="LeaveReason" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

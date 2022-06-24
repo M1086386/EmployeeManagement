@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="eb17cbd7dad041f39658968a22c4ae02" Name="Diagram1">
+        <EntityTypeShape EntityType="EmployeeManagementDBModel.CompanyWorkingHour" Width="1.5" PointX="2.125" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeManagementDBModel.EmployeeDesignationTable" Width="1.5" PointX="7.375" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeManagementDBModel.EmployeeDetailsTable" Width="1.5" PointX="5" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeManagementDBModel.LoginTable" Width="1.5" PointX="5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeManagementDBModel.PaymentRule" Width="1.5" PointX="0.875" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="EmployeeManagementDBModel.RequestLeave" Width="1.5" PointX="4.875" PointY="8.125" IsExpanded="true" />
+        <AssociationConnector Association="EmployeeManagementDBModel.FK_EmployeeDetailsTable_CompanyWorkingHours" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeManagementDBModel.FK_EmployeeDetailsTable_EmployeeDesignationTable" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeManagementDBModel.FK_EmployeeDetailsTable_RequestLeave" ManuallyRouted="false" />
+        <AssociationConnector Association="EmployeeManagementDBModel.FK_LoginTable_EmployeeDetailsTable" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
